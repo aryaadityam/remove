@@ -1,0 +1,15 @@
+.DS_Store
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+
+nextjs/.next/
+nextjs/node_modules/
+nextjs/out/
+nextjs/dist/
+nextjs/.vercel/
+
+server/.cache/
+server/models/
