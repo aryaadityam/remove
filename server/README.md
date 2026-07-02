@@ -21,3 +21,5 @@ NGROK_DOMAIN = "your-ngrok-domain.ngrok-free.dev"
 ```
 
 Images use rembg/BiRefNet. Videos use Robust Video Matting TorchScript.
+By default, startup preloads both the image model and video model. Set
+`PRELOAD_VIDEO_MODEL=0` before `python app.py` if you want video lazy-loading.

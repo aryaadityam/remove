@@ -72,6 +72,7 @@ MAX_VIDEO_FPS=30
 MAX_VIDEO_SIDE=720
 RVM_MODEL=mobilenetv3
 RVM_DOWNSAMPLE_RATIO=auto
+PRELOAD_VIDEO_MODEL=1
 ```
 
 Override defaults when starting the server:
@@ -83,6 +84,9 @@ Override defaults when starting the server:
   --ngrok-token {NGROK_TOKEN} \
   --ngrok-domain {NGROK_DOMAIN}
 ```
+
+Set `PRELOAD_VIDEO_MODEL=0` only if you want faster startup and are okay with
+the first video request loading the RVM model.
 
 ## API
 
@@ -116,8 +120,9 @@ Then deploy `nextjs/` as the Vercel project root.
 
 ## Notes
 
-- First video request downloads the RVM TorchScript model.
-- First image request downloads the selected rembg model.
+- Startup loads the selected image model and, by default, the RVM video model.
+- First startup can be slow because Colab downloads the selected rembg model
+  and the RVM TorchScript model.
 - Colab sessions stop when the runtime disconnects.
 - Keep your ngrok token private.
 - If video fails with a `libc10_cuda.so` / `libcudart.so` CUDA symbol error,

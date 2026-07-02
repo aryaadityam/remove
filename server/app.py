@@ -57,6 +57,7 @@ os.environ.setdefault("MAX_VIDEO_SIDE", "720")
 os.environ.setdefault("RVM_MODEL", "mobilenetv3")
 os.environ.setdefault("RVM_DOWNSAMPLE_RATIO", "auto")
 os.environ.setdefault("REMOVE_MODEL_HOME", "/content/.cache/remove-bg")
+os.environ.setdefault("PRELOAD_VIDEO_MODEL", "1")
 
 MODEL_NAME = os.getenv("REMOVE_SERVER_MODEL", "birefnet-general").strip()
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(12 * 1024 * 1024)))
@@ -70,6 +71,12 @@ MAX_VIDEO_SIDE = int(os.getenv("MAX_VIDEO_SIDE", "720"))
 RVM_MODEL = os.getenv("RVM_MODEL", "mobilenetv3").strip() or "mobilenetv3"
 RVM_DOWNSAMPLE_RATIO = os.getenv("RVM_DOWNSAMPLE_RATIO", "auto").strip()
 MODEL_HOME = Path(os.getenv("REMOVE_MODEL_HOME", "/content/.cache/remove-bg"))
+PRELOAD_VIDEO_MODEL = os.getenv("PRELOAD_VIDEO_MODEL", "1").strip().lower() not in {
+    "0",
+    "false",
+    "no",
+    "off",
+}
 RVM_TORCHSCRIPT_URLS = {
     "mobilenetv3": (
         "https://github.com/PeterL1n/RobustVideoMatting/releases/download/"
@@ -86,7 +93,12 @@ app = FastAPI(title="Remove BG Colab GPU Server")
 
 @app.on_event("startup")
 async def warm_up_model() -> None:
+    print(f"Preloading image model: {MODEL_NAME}")
     await run_in_threadpool(_model_session)
+    if PRELOAD_VIDEO_MODEL:
+        print(f"Preloading video model: RVM {RVM_MODEL}")
+        await run_in_threadpool(_rvm_session)
+    print("Model preload complete.")
 
 
 @app.get("/")
@@ -111,6 +123,7 @@ def health() -> dict[str, object]:
         "maxVideoSide": MAX_VIDEO_SIDE,
         "videoModel": f"rvm-{RVM_MODEL}",
         "videoDownsampleRatio": RVM_DOWNSAMPLE_RATIO,
+        "preloadVideoModel": PRELOAD_VIDEO_MODEL,
     }
 
 
