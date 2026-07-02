@@ -34,7 +34,7 @@ Run these cells:
 ```
 
 ```python
-!pip uninstall -y -q onnxruntime onnxruntime-gpu rembg
+!pip uninstall -y -q onnxruntime onnxruntime-gpu rembg nvidia-cuda-runtime-cu12 nvidia-cublas-cu12 nvidia-cudnn-cu12
 !pip install -q -r requirements-colab.txt
 ```
 
@@ -123,6 +123,8 @@ Then deploy `nextjs/` as the Vercel project root.
 - Startup loads the selected image model and, by default, the RVM video model.
 - First startup can be slow because Colab downloads the selected rembg model
   and the RVM TorchScript model.
+- `/health` should show `CUDAExecutionProvider` for ONNX image GPU and
+  `torchCudaAvailable: true` for video GPU.
 - Colab sessions stop when the runtime disconnects.
 - Keep your ngrok token private.
 - If video fails with a `libc10_cuda.so` / `libcudart.so` CUDA symbol error,

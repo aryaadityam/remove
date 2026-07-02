@@ -106,8 +106,31 @@ def root() -> dict[str, object]:
     return health()
 
 
+@lru_cache(maxsize=1)
+def _torch_cuda_status() -> dict[str, object]:
+    try:
+        import torch
+
+        cuda_available = bool(torch.cuda.is_available())
+        return {
+            "torchCudaAvailable": cuda_available,
+            "torchCudaVersion": getattr(torch.version, "cuda", None),
+            "torchDevice": torch.cuda.get_device_name(0)
+            if cuda_available
+            else None,
+        }
+    except Exception as error:
+        return {
+            "torchCudaAvailable": False,
+            "torchCudaVersion": None,
+            "torchDevice": None,
+            "torchImportError": str(error),
+        }
+
+
 @app.get("/health")
 def health() -> dict[str, object]:
+    torch_status = _torch_cuda_status()
     return {
         "ok": True,
         "provider": "remove-bg-colab",
@@ -124,6 +147,7 @@ def health() -> dict[str, object]:
         "videoModel": f"rvm-{RVM_MODEL}",
         "videoDownsampleRatio": RVM_DOWNSAMPLE_RATIO,
         "preloadVideoModel": PRELOAD_VIDEO_MODEL,
+        **torch_status,
     }
 
 
