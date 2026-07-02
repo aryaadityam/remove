@@ -5,7 +5,7 @@ FastAPI server designed for Google Colab GPU.
 Run from Colab:
 
 ```python
-!pip uninstall -y -q onnxruntime onnxruntime-gpu
+!pip uninstall -y -q onnxruntime onnxruntime-gpu rembg
 !pip install -q -r requirements-colab.txt
 
 from getpass import getpass

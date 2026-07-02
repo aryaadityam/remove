@@ -34,7 +34,7 @@ Run these cells:
 ```
 
 ```python
-!pip uninstall -y -q onnxruntime onnxruntime-gpu
+!pip uninstall -y -q onnxruntime onnxruntime-gpu rembg
 !pip install -q -r requirements-colab.txt
 ```
 
@@ -43,7 +43,7 @@ Start the server with ngrok:
 ```python
 from getpass import getpass
 
-NGROK_TOKEN = getpass("NGROK_TOKEN: ")
+NGROK_TOKEN = getpass("NGROK_TOKEN:  ")
 NGROK_DOMAIN = "your-ngrok-domain.ngrok-free.dev"
 MODEL = "birefnet-general"
 
@@ -120,3 +120,7 @@ Then deploy `nextjs/` as the Vercel project root.
 - First image request downloads the selected rembg model.
 - Colab sessions stop when the runtime disconnects.
 - Keep your ngrok token private.
+- If video fails with a `libc10_cuda.so` / `libcudart.so` CUDA symbol error,
+  restart the Colab runtime, pull the latest repo, then run the install cell
+  again. That error usually means old CUDA packages were already loaded in the
+  current runtime.
