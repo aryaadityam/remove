@@ -294,7 +294,7 @@ export default function Home() {
                   <a
                     href={resultUrl}
                     download={
-                      isVideo ? "capwords-video.webm" : "capwords-sticker.png"
+                      isVideo ? "remove-bg-video.webm" : "remove-bg-image.png"
                     }
                     className="rounded-full bg-white px-4 py-2.5 text-xs font-bold text-ink shadow-sm transition hover:bg-white/80"
                   >

@@ -68,7 +68,7 @@ from starlette.concurrency import run_in_threadpool
 
 
 def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run CapWords on Colab.")
+    parser = argparse.ArgumentParser(description="Run Remove BG on Colab.")
     parser.add_argument("--host", default="0.0.0.0")
     parser.add_argument("--port", default=8787, type=int)
     parser.add_argument(
@@ -94,7 +94,7 @@ def _parse_args() -> argparse.Namespace:
 
 ARGS = _parse_args()
 os.environ.setdefault("U2NET_HOME", "/content/.u2net")
-os.environ["CAPWORDS_SERVER_MODEL"] = ARGS.model
+os.environ["REMOVE_SERVER_MODEL"] = ARGS.model
 os.environ.setdefault("MAX_UPLOAD_BYTES", str(12 * 1024 * 1024))
 os.environ.setdefault("MAX_PROCESS_SIDE", "2048")
 os.environ.setdefault("MAX_VIDEO_UPLOAD_BYTES", str(80 * 1024 * 1024))
@@ -103,9 +103,9 @@ os.environ.setdefault("MAX_VIDEO_FPS", "30")
 os.environ.setdefault("MAX_VIDEO_SIDE", "720")
 os.environ.setdefault("RVM_MODEL", "mobilenetv3")
 os.environ.setdefault("RVM_DOWNSAMPLE_RATIO", "auto")
-os.environ.setdefault("CAPWORDS_MODEL_HOME", "/content/.cache/capwords")
+os.environ.setdefault("REMOVE_MODEL_HOME", "/content/.cache/remove-bg")
 
-MODEL_NAME = os.getenv("CAPWORDS_SERVER_MODEL", "birefnet-general").strip()
+MODEL_NAME = os.getenv("REMOVE_SERVER_MODEL", "birefnet-general").strip()
 MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", str(12 * 1024 * 1024)))
 MAX_PROCESS_SIDE = int(os.getenv("MAX_PROCESS_SIDE", "2048"))
 MAX_VIDEO_UPLOAD_BYTES = int(
@@ -116,7 +116,7 @@ MAX_VIDEO_FPS = int(os.getenv("MAX_VIDEO_FPS", "30"))
 MAX_VIDEO_SIDE = int(os.getenv("MAX_VIDEO_SIDE", "720"))
 RVM_MODEL = os.getenv("RVM_MODEL", "mobilenetv3").strip() or "mobilenetv3"
 RVM_DOWNSAMPLE_RATIO = os.getenv("RVM_DOWNSAMPLE_RATIO", "auto").strip()
-MODEL_HOME = Path(os.getenv("CAPWORDS_MODEL_HOME", "/content/.cache/capwords"))
+MODEL_HOME = Path(os.getenv("REMOVE_MODEL_HOME", "/content/.cache/remove-bg"))
 RVM_TORCHSCRIPT_URLS = {
     "mobilenetv3": (
         "https://github.com/PeterL1n/RobustVideoMatting/releases/download/"
@@ -128,7 +128,7 @@ RVM_TORCHSCRIPT_URLS = {
     ),
 }
 
-app = FastAPI(title="CapWords Colab GPU Server")
+app = FastAPI(title="Remove BG Colab GPU Server")
 
 
 @app.on_event("startup")
@@ -145,7 +145,7 @@ def root() -> dict[str, object]:
 def health() -> dict[str, object]:
     return {
         "ok": True,
-        "provider": "capwords-colab",
+        "provider": "remove-bg-colab",
         "model": MODEL_NAME,
         "objectLabelModel": None,
         "onnxruntimeDevice": ort.get_device(),
@@ -284,7 +284,7 @@ def _remove_video_background_sync(
     normalized_format = _normalize_video_format(output_format)
     ffmpeg = _ffmpeg_bin()
 
-    with TemporaryDirectory(prefix="capwords-video-") as tmp:
+    with TemporaryDirectory(prefix="remove-bg-video-") as tmp:
         tmp_path = Path(tmp)
         input_path = tmp_path / "input-video"
         source_frames = tmp_path / "source-frames"
@@ -667,7 +667,7 @@ def _start_tunnel() -> object | None:
 
 
 def main() -> None:
-    print("CapWords Colab server")
+    print("Remove BG Colab server")
     print(f"Model: {MODEL_NAME}")
     print("Object label model: disabled")
     print(

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CapWords Remove BG",
-  description: "Remove image backgrounds with a self-hosted CapWords server."
+  title: "Remove BG",
+  description: "Remove image and video backgrounds with a self-hosted server."
 };
 
 export default function RootLayout({

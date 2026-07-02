@@ -103,13 +103,13 @@ Run locally:
 ```bash
 cd nextjs
 npm install
-CAPWORDS_BG_SERVER_URL=https://your-ngrok-domain.ngrok-free.dev npm run dev
+REMOVE_BG_SERVER_URL=https://your-ngrok-domain.ngrok-free.dev npm run dev
 ```
 
 For Vercel, set this environment variable:
 
 ```text
-CAPWORDS_BG_SERVER_URL=https://your-ngrok-domain.ngrok-free.dev
+REMOVE_BG_SERVER_URL=https://your-ngrok-domain.ngrok-free.dev
 ```
 
 Then deploy `nextjs/` as the Vercel project root.

@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 
-const serverUrl = process.env.CAPWORDS_BG_SERVER_URL;
+const serverUrl = process.env.REMOVE_BG_SERVER_URL;
 
 export async function POST(request: NextRequest) {
   if (!serverUrl) {
     return NextResponse.json(
-      { error: "CAPWORDS_BG_SERVER_URL is not configured." },
+      { error: "REMOVE_BG_SERVER_URL is not configured." },
       { status: 500 }
     );
   }
